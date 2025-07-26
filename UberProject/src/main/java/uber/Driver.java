@@ -1,5 +1,5 @@
 package uber;
-import java.util.*;
+import java.util.ArrayList;
 
 public class Driver extends User {
     public Integer size;
@@ -26,21 +26,9 @@ public class Driver extends User {
         return new ArrayList<Rider>();
     }
 
-    public Message sendRiderNotification(){
-        return new Message();
-    }
-
-
-    public void updateLocation(){
+    public void sendRiderNotification(){
 
     }
 
-    public void cancelTrip(){
-
-    }
-
-    public void completeTrip(){
-
-    }
 
 }

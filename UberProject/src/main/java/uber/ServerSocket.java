@@ -1,7 +1,6 @@
 package uber;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -9,8 +8,6 @@ import org.java_websocket.server.WebSocketServer;
 import java.util.*;
 
 public class ServerSocket extends WebSocketServer {
-
-    private final Set<WebSocket> connections = Collections.synchronizedSet(new HashSet<>());
 
     public ServerSocket(InetSocketAddress address) {
         super(address);

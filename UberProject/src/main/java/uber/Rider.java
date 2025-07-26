@@ -22,15 +22,5 @@ public class Rider extends User{
         this.requirements = requirements;
     }
 
-    public void updateLocation(){
-
-    }
-
-    public void cancelTrip(){
-
-    }
-    public void completeTrip(){
-
-    }
 
 }

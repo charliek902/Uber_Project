@@ -1,12 +1,8 @@
 package uber;
-
 import org.java_websocket.server.WebSocketServer;
-
 import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
 
 public class ServerSocketHandler {
-
     WebSocketServer server;
 
     public ServerSocketHandler() {
@@ -19,12 +15,12 @@ public class ServerSocketHandler {
     }
 
     public void sendMessageFromClient(ClientSocket client, String message) {
-
-
+        // for this overload we just need to find associated clients...
     }
 
-    public void sendMessageFromServer(String message) {
-        this.server.broadcast(message);
+    public void sendMessageFromClient(ClientSocket client, String message, User connectedClient) {
+        // need to iterate over all the connected clients, get the associated driver or rider
+        // find that connection and then send the message
     }
 
 }

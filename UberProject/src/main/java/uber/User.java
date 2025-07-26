@@ -1,13 +1,10 @@
 package uber;
-
-import org.apache.juli.logging.Log;
-import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 abstract public class User {
@@ -24,9 +21,8 @@ abstract public class User {
     public WebSocketClient client;
     ThreadPool threadPool;
     private final ReentrantLock lock = new ReentrantLock();
-
-    // location queue for each connected ride
-    // message queue for each connected ride
+    HashMap<Integer, ConcurrentLinkedQueue<Message>> messages;
+    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> clientLocation;
 
     public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService){
         this.fullName = fullName;
@@ -138,6 +134,17 @@ abstract public class User {
         // send to the the message service
     }
 
+    public void updateLocation(){
+
+    }
+
+    public void cancelTrip(){
+
+    }
+
+    public void completeTrip(){
+
+    }
 
     public void setThreadPool(ThreadPool threadPool) {
         this.threadPool = threadPool;

@@ -1,9 +1,11 @@
 package uber;
 
-public class RideResponse {
+public class Response {
     Trip rideType;
     Rider rider;
     Driver driver;
     Status status;
-    public RideResponse(){}
+    public Response(){
+
+    }
 }
