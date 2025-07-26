@@ -1,6 +1,6 @@
 package uber;
 
-public class RideRequest {
+public class Request {
     Integer size;
     GeoLocation start;
     GeoLocation destination;
@@ -9,5 +9,7 @@ public class RideRequest {
     Rider rider;
     Driver driver;
     RequestType requestType;
-    public RideRequest(){}
+    Integer time;
+    Integer timeout;
+    public Request(){}
 }

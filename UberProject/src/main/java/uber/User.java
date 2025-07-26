@@ -1,23 +1,48 @@
 package uber;
 
+import org.apache.juli.logging.Log;
+import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 abstract public class User {
+    public Integer Id;
     public String fullName;
     public GeoLocation currentLocation;
     public Double rating;
     public HashMap<String, ArrayList<Double>> pastRatings;
     public String email;
-    public Boolean isLocked;
     Ride currentRide;
+    private LocationService locationService;
+    private MessageService messageService;
+    private TripService tripService;
+    public WebSocketClient client;
+    ThreadPool threadPool;
+    private final ReentrantLock lock = new ReentrantLock();
 
-    public User(String fullName, GeoLocation location, String email){
+    // location queue for each connected ride
+    // message queue for each connected ride
+
+    public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService){
         this.fullName = fullName;
         this.currentLocation = location;
         this.rating = 0.0;
         this.pastRatings = new HashMap<String, ArrayList<Double>>();
         this.email = email;
-        this.isLocked = false;
+        this.Id = id;
+        this.locationService = locationService;
+        this.messageService = messageService;
+        this.tripService = tripService;
+
+        Boolean connected = this.createConnection();
+        if (!connected) {
+            // have to do some sort of logic to handle connection not established...
+        }
     }
 
     public Double getRating(){
@@ -32,6 +57,7 @@ abstract public class User {
         return this.fullName;
     }
 
+    //TODO: api to get the user's current location
     public GeoLocation getCurrentLocation(){
         return this.currentLocation;
     }
@@ -58,6 +84,13 @@ abstract public class User {
         return this.currentRide;
     }
 
+    public void removeUserRating(String email){
+        if(this.pastRatings.containsKey(email)){
+            this.pastRatings.remove(email);
+            this.rating = this.setRating();
+        }
+    }
+
     public void addRating(String email, Double rating){
         if(!this.pastRatings.containsKey(email)){
             this.pastRatings.put(email, new ArrayList<Double>());
@@ -76,6 +109,38 @@ abstract public class User {
             }
         }
         return summedOverall / count;
+    }
+
+    private Boolean createConnection() {
+        try {
+            this.client = new ClientSocket(new URI("ws://localhost:8887"), this);
+            client.connectBlocking();
+            return true;
+        } catch(InterruptedException e) {
+            return false;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
+    // update location, get location, request a ride, accept a ride
+
+    public void addMessage(String message) {
+        // message gets added here...
+    }
+
+    public void addMessage(ByteBuffer message) {
+        // handle the type of message here...
+    }
+
+    public void sendMessage(String message) {
+        // build the request here from the message...
+        // send to the the message service
+    }
+
+
+    public void setThreadPool(ThreadPool threadPool) {
+        this.threadPool = threadPool;
     }
 
 }

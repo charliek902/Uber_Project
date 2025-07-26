@@ -1,11 +1,13 @@
 package uber;
 
-public class Rider extends User implements Client{
+public class Rider extends User{
     Driver currentDriver;
     String requirements;
+    Integer size;
 
-    public Rider(String fullName, GeoLocation location, String email) {
-        super(fullName, location, email);
+    public Rider(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, Integer size) {
+        super(id, fullName, location, email, locationService, messageService, tripService);
+        this.size = size;
     }
 
     public Driver getCurrentDriver(){
@@ -18,29 +20,6 @@ public class Rider extends User implements Client{
 
     public void setRequirements(String requirements){
         this.requirements = requirements;
-    }
-
-    @Override
-    public void createConnection() {
-
-    }
-
-    @Override
-    public void closeConnection() {
-
-    }
-
-    @Override
-    public GeoLocation requestLocation() {
-        if(this.getCurrentDriver() == null){
-            return null;
-        }
-        RideRequest req = new RideRequestBuilder(new RideRequest())
-                .setDriver(this.currentDriver)
-                .setRider(this)
-                .setRequestType(RequestType.DRIVER_LOCATION)
-                .build();
-        return LocationService.requestLocation(req);
     }
 
     public void updateLocation(){

@@ -1,21 +1,18 @@
 package uber;
-import java.util.ArrayList;
 
 public class LocationService {
-    // implement the GeoHash here so that locations can be updated
+    ServerSocketHandler serverSocketHandler;
 
-    public static ArrayList<Driver> getNearbyDrivers(RideRequest request){
-        if(request.rider == null){
-            return null;
-        }
-        return new ArrayList<Driver>();
+    public LocationService(ServerSocketHandler serverSocketHandler) {
+        this.serverSocketHandler = serverSocketHandler;
     }
 
-    public static GeoLocation requestLocation(RideRequest request){
+    public void updateLocation(Request request){
 
-        return new GeoLocation();
     }
 
+    public void getLocation(Request request){
 
+    }
 
 }
