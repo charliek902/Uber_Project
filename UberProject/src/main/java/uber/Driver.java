@@ -24,7 +24,7 @@ public class Driver extends User {
         return this.rider;
     }
 
-    public Response getRider(){
+    public void getRider(){
         Request request = new RequestBuilder(new Request())
                 .setCurrentUser(this)
                 .setDriver(this)
@@ -39,9 +39,8 @@ public class Driver extends User {
         ArrayList<Rider> nearbyRiders = new ArrayList<Rider>();
         if(request.requestType != RequestType.INVALID_REQUEST) {
             Response response = this.locationService.getRider(request);
-
+            this.setCurrentRider(response.rider);
         }
-        return Utils.returnFailure();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class Driver extends User {
     }
 
     @Override
-    public void completeTrip(){
+    public void completeTrip() {
         Request request = new RequestBuilder(new Request())
                 .setCurrentUser(this)
                 .setRider(this.rider)
@@ -73,6 +72,18 @@ public class Driver extends User {
                 .build();
         this.tripService.completeTrip(request);
     }
+
+    @Override
+    public void updateLocation() {
+        Request request = new RequestBuilder(new Request())
+                .setStartingLocation(this.currentLocation)
+                .setCurrentUser(this)
+                .setRequestType(RequestType.UPDATE_LOCATION)
+                .validate()
+                .build();
+        Response response = this.locationService.updateLocation(request);
+    }
+
 
     public void move() {
         GeoLocation currentLocation = this.getCurrentLocation();

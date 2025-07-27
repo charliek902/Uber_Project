@@ -27,6 +27,10 @@ public class ResponseBuilder {
         return this;
     }
 
+    public ResponseBuilder setResponseType(RequestType type) {
+        this.response.responseType = type;
+        return this;
+    }
 
     public Response build() {
         return this.response;

@@ -18,10 +18,6 @@ public class Rider extends User{
         this.currentDriver = driver;
     }
 
-    public void setRequirements(String requirements){
-        this.requirements = requirements;
-    }
-
     @Override
     public void cancelTrip(){
         Request request = new RequestBuilder(new Request())
@@ -52,5 +48,28 @@ public class Rider extends User{
         this.tripService.completeTrip(request);
     }
 
+    @Override
+    public void updateLocation() {
+        Request request = new RequestBuilder(new Request())
+                .setStartingLocation(this.currentLocation)
+                .setCurrentUser(this)
+                .setRide(this.getCurrentRide())
+                .setRequestType(RequestType.UPDATE_LOCATION)
+                .validate()
+                .build();
+        Response response = this.locationService.updateLocation(request);
+    }
 
+
+    public void getDriver() {
+        Request request = new RequestBuilder(new Request())
+                .setRequestType(RequestType.FIND_DRIVERS)
+                .setStartingLocation(this.currentLocation)
+                .setRideType(Trip.NORMAL)
+                .setCurrentUser(this)
+                .validate()
+                .build();
+        Response response = this.locationService.getDriver(request);
+        this.setCurrentDriver(response.driver);
+    }
 }

@@ -5,6 +5,7 @@ public class Response {
     Driver driver;
     Status status;
     String errorMessage;
+    RequestType responseType;
     public Response(){
 
     }

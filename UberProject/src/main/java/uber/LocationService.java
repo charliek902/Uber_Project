@@ -1,5 +1,7 @@
 package uber;
 
+import java.util.ArrayList;
+
 public class LocationService {
     ServerSocketLayer serverSocketHandler;
     MatchingEngine matchingEngine;
@@ -9,9 +11,26 @@ public class LocationService {
         this.matchingEngine = matchingEngine;
     }
 
-    public void updateLocation(Request request) {
-        // also need to update the engine if driver / rider does not have a client yet
+    public Response updateLocation(Request request) {
+        Boolean driverWithNoRide = request.currentUser instanceof Driver && request.ride == null;
+        Boolean riderWithNoRide = request.currentUser instanceof Rider && request.ride == null;
 
+        if (driverWithNoRide) {
+            ArrayList<Driver> drivers = new ArrayList<Driver>();
+            drivers.add(request.driver);
+            this.matchingEngine.addDrivers(drivers);
+            return new ResponseBuilder(new Response())
+                    .setStatus(Status.SUCCESS)
+                    .build();
+        } else if (riderWithNoRide) {
+            ArrayList<Rider> riders = new ArrayList<Rider>();
+            riders.add(request.rider);
+            this.matchingEngine.addRiders(riders);
+            return new ResponseBuilder(new Response())
+                    .setStatus(Status.SUCCESS)
+                    .build();
+        }
+        return this.serverSocketHandler.sendMessageFromClient(request);
     }
 
     public Response getRider(Request request) {
@@ -25,11 +44,15 @@ public class LocationService {
         return Utils.returnFailure();
     }
 
-    public void getDriver(Request request) {
+    public Response getDriver(Request request) {
         request = new RequestBuilder(request)
                 .setMatchingDrivers(matchingEngine.getAvailableDrivers(request.start))
                 .build();
-        serverSocketHandler.sendMessageFromClient(request);
+        Response response = serverSocketHandler.sendMessageFromClient(request);
+        if (response.status != null && response.status.equals(Status.SUCCESS)) {
+            return response;
+        }
+        return Utils.returnFailure();
     }
 
 }

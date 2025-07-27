@@ -40,11 +40,6 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setSpecialRequirements(String reqs){
-        this.request.requirements = reqs;
-        return this;
-    }
-
     public RequestBuilder setRideType(Trip tripType){
         request.rideType = tripType;
         return this;

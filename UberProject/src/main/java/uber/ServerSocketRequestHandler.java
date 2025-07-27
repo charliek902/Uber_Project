@@ -13,8 +13,8 @@ public class ServerSocketRequestHandler {
     public static Response handleRequestDrivers(Request request, ConnectionDB db) {
         for (Integer matchingDriverId : request.matchingDriverIds) {
             ClientSocket socket = db.getUserConnection(matchingDriverId);
+            // TODO: check if the associated driver has accepted
             socket.onMessage("");
-            // check if the associated driver has accepted
             Driver selectedDriver = (Driver) db.getUserConnection(matchingDriverId).getUser();
             if(selectedDriver != null && selectedDriver.Id == matchingDriverId) {
                 return new ResponseBuilder(new Response())

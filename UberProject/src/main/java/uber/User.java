@@ -143,9 +143,7 @@ abstract public class User {
         // send to the the message service
     }
 
-    public void updateLocation(){
-
-    }
+    public void updateLocation(){}
 
     public void cancelTrip(){}
 
