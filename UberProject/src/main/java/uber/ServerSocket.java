@@ -5,7 +5,6 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import java.util.*;
 
 public class ServerSocket extends WebSocketServer {
 
@@ -14,9 +13,7 @@ public class ServerSocket extends WebSocketServer {
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
-    }
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {}
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {

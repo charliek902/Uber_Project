@@ -3,8 +3,9 @@ package uber;
 public enum RequestType {
     UPDATE_LOCATION,
     FIND_DRIVERS,
-    GET_RIDERS,
+    REQUEST_RIDERS,
     CANCEL_TRIP,
     COMPLETE_TRIP,
-    SEND_MESSAGE
+    SEND_MESSAGE,
+    INVALID_REQUEST
 }

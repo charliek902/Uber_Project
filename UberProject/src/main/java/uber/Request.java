@@ -1,4 +1,5 @@
 package uber;
+import java.util.ArrayList;
 
 public class Request {
     Integer size;
@@ -11,5 +12,11 @@ public class Request {
     RequestType requestType;
     Integer time;
     Integer timeout;
+    User currentUser;
+    User connectedUser;
+    ClientSocket connectedUserSocket;
+    Ride ride;
+    ArrayList<Integer> matchingRiderIds;
+    ArrayList<Integer> matchingDriverIds;
     public Request(){}
 }

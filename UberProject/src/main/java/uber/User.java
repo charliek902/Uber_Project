@@ -15,16 +15,20 @@ abstract public class User {
     public HashMap<String, ArrayList<Double>> pastRatings;
     public String email;
     Ride currentRide;
-    private LocationService locationService;
-    private MessageService messageService;
-    private TripService tripService;
-    public WebSocketClient client;
+    public LocationService locationService;
+    public MessageService messageService;
+    public TripService tripService;
+    public ConnectionDB db;
+    public ClientSocket client;
     ThreadPool threadPool;
     private final ReentrantLock lock = new ReentrantLock();
-    HashMap<Integer, ConcurrentLinkedQueue<Message>> messages;
-    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> clientLocation;
 
-    public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService){
+    HashMap<Integer, ConcurrentLinkedQueue<Message>> clientMessages;
+    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> clientLocation;
+    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> requests;
+    ConcurrentLinkedQueue<String> systemMessages = new ConcurrentLinkedQueue<>();
+
+    public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db){
         this.fullName = fullName;
         this.currentLocation = location;
         this.rating = 0.0;
@@ -34,6 +38,7 @@ abstract public class User {
         this.locationService = locationService;
         this.messageService = messageService;
         this.tripService = tripService;
+        this.db = db;
 
         Boolean connected = this.createConnection();
         if (!connected) {
@@ -53,9 +58,12 @@ abstract public class User {
         return this.fullName;
     }
 
-    //TODO: api to get the user's current location
-    public GeoLocation getCurrentLocation(){
+    public GeoLocation getCurrentLocation() {
         return this.currentLocation;
+    }
+
+    public WebSocketClient getClientSocket() {
+        return this.client;
     }
 
     public void setEmail(String email) {
@@ -109,8 +117,9 @@ abstract public class User {
 
     private Boolean createConnection() {
         try {
-            this.client = new ClientSocket(new URI("ws://localhost:8887"), this);
+            this.client = new ClientSocket(new URI("ws://localhost:8080"), this);
             client.connectBlocking();
+            this.db.addToConnectionDB(Id, (ClientSocket) this.client);
             return true;
         } catch(InterruptedException e) {
             return false;
@@ -138,13 +147,9 @@ abstract public class User {
 
     }
 
-    public void cancelTrip(){
+    public void cancelTrip(){}
 
-    }
-
-    public void completeTrip(){
-
-    }
+    public void completeTrip(){}
 
     public void setThreadPool(ThreadPool threadPool) {
         this.threadPool = threadPool;

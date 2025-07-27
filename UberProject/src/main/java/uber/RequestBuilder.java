@@ -1,5 +1,7 @@
 package uber;
 
+import java.util.ArrayList;
+
 public class RequestBuilder {
 
     Request request;
@@ -20,6 +22,21 @@ public class RequestBuilder {
 
     public RequestBuilder setDestinationLocation(GeoLocation location){
         this.request.destination = location;
+        return this;
+    }
+
+    public RequestBuilder setCurrentUser(User user) {
+        this.request.currentUser = user;
+        return this;
+    }
+
+    public RequestBuilder setRide(Ride ride){
+        this.request.ride = ride;
+        return this;
+    }
+
+    public RequestBuilder setUserClientConnection(ClientSocket socket) {
+        this.request.connectedUserSocket = socket;
         return this;
     }
 
@@ -53,8 +70,29 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setRequestTime(Integer time) {
+    public RequestBuilder setCurrentRequestTime(Integer time) {
         this.request.time = time;
+        return this;
+    }
+
+    public RequestBuilder setMatchingRiders(ArrayList<Integer> ridersIds) {
+        this.request.matchingRiderIds = ridersIds;
+        return this;
+    }
+
+    public RequestBuilder setMatchingDrivers(ArrayList<Integer> driverIds) {
+        this.request.matchingDriverIds = driverIds;
+        return this;
+    }
+
+    public RequestBuilder validate() {
+        if (RequestValidator.validateRequest(this.request).size() != 0) {
+            if (this.request.currentUser != null) {
+                String errorMessage = "Invalid Request. The following fields are missing: " + String.join(", ", RequestValidator.validateRequest(this.request));
+                this.request.currentUser.systemMessages.add(errorMessage);
+                this.request.requestType = RequestType.INVALID_REQUEST;
+            }
+        }
         return this;
     }
 

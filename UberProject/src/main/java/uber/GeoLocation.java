@@ -1,18 +1,14 @@
 package uber;
 
 public class GeoLocation {
-    String longitude;
-    String latitude;
-    public GeoLocation(String longitude, String latitude){
+    Double longitude;
+    Double latitude;
+    public GeoLocation(Double longitude, Double latitude){
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public GeoLocation getLocation(){
-        return this;
-    }
-
-    public void setLocation(String longitude, String latitude){
+    public void setLocation(Double longitude, Double latitude){
         if (longitude == null && latitude == null) {
             return;
         }
@@ -22,4 +18,14 @@ public class GeoLocation {
         }
         this.longitude = longitude;
     }
+
+    public Double getLongitude() {
+        return this.longitude;
+    }
+
+    public Double getLatitude() {
+        return this.latitude;
+    }
+
+
 }

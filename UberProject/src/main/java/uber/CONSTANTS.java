@@ -1,4 +1,5 @@
 package uber;
 
-public enum CONSTANTS {
+public class CONSTANTS {
+
 }

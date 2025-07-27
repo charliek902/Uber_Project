@@ -2,8 +2,8 @@ package uber;
 
 public class MessageService {
 
-    ServerSocketHandler serverSocketHandler;
-    public MessageService(ServerSocketHandler serverSocketHandler) {
+    ServerSocketLayer serverSocketHandler;
+    public MessageService(ServerSocketLayer serverSocketHandler) {
         this.serverSocketHandler = serverSocketHandler;
     }
 

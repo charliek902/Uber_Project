@@ -5,7 +5,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 public class ClientSocket extends WebSocketClient {
-    private User user;
+    public User user;
 
     public ClientSocket(URI serverUri, User user) {
         super(serverUri);
@@ -40,8 +40,18 @@ public class ClientSocket extends WebSocketClient {
     }
 
     @Override
+    public void send(String message) {
+        // Pass message to the user
+        user.addMessage(message);
+    }
+
+    @Override
     public void onError(Exception ex) {
         System.err.println("an error occurred:" + ex);
+    }
+
+    public User getUser() {
+        return this.user;
     }
 
 }
