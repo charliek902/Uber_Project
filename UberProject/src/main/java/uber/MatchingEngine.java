@@ -16,17 +16,15 @@ public class MatchingEngine {
     }
 
     public void addDrivers(ArrayList<Driver> drivers) {
-        this.drivers.addAll(drivers);
+        this.quadTree.addDrivers(drivers);
     }
 
-    public void addRiders(ArrayList<Rider> riders) {
-        this.riders.addAll(riders);
+    public void removeDriver(Driver driver) {
+        this.quadTree.removeDriver(driver);
     }
 
-    public ArrayList<Integer> getAvailableDrivers(GeoLocation startingLocation) {
-        ArrayList<Integer> riderIds = new ArrayList<Integer>();
-        riderIds.add(1);
-        return riderIds;
+    public ArrayList<Driver> getAvailableDrivers(Rider rider) {
+        return this.quadTree.findAvailableDrivers(rider);
     }
 
 

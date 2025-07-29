@@ -3,7 +3,7 @@ package uber;
 public class Response {
     Rider rider;
     Driver driver;
-    Status status;
+    ResponseStatus status;
     String errorMessage;
     RequestType responseType;
     public Response(){

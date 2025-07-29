@@ -36,7 +36,7 @@ abstract public class User {
         this.pastRatings = new HashMap<String, ArrayList<Double>>();
         this.email = email;
         this.Id = id;
-        this.userStatus = UserStatus.AVAILABLE;
+        this.userStatus = null;
         this.locationService = locationService;
         this.messageService = messageService;
         this.tripService = tripService;

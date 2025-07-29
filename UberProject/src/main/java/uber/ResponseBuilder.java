@@ -7,7 +7,7 @@ public class ResponseBuilder {
         this.response = response;
     }
 
-    public ResponseBuilder setStatus(Status status) {
+    public ResponseBuilder setStatus(ResponseStatus status) {
         this.response.status = status;
         return this;
     }

@@ -4,7 +4,7 @@ public class Utils {
 
     public static Response returnFailure() {
         return new ResponseBuilder(new Response())
-                .setStatus(Status.FAILURE)
+                .setStatus(ResponseStatus.FAILURE)
                 .build();
     }
 

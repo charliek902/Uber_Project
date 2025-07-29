@@ -70,13 +70,8 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setMatchingRiders(ArrayList<Integer> ridersIds) {
-        this.request.matchingRiderIds = ridersIds;
-        return this;
-    }
-
-    public RequestBuilder setMatchingDrivers(ArrayList<Integer> driverIds) {
-        this.request.matchingDriverIds = driverIds;
+    public RequestBuilder setMatchingDrivers(ArrayList<Driver> drivers) {
+        this.request.matchingDrivers = drivers;
         return this;
     }
 

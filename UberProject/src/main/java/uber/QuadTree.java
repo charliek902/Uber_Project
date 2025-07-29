@@ -29,6 +29,14 @@ public class QuadTree {
         }
     }
 
+    public void removeDriver(Driver driver) {
+        for (QuadNode quadNode : quadNodes) {
+            if (quadNode.checkLocationInNode(driver.getCurrentLocation())) {
+                quadNode.removeDriver(driver);
+            }
+        }
+    }
+
     private void buildQuadTree(GeoLocation center, Integer QuadNodeBoundary) {
         QuadNode topLeft = new QuadNode(new GeoLocation(center.getLongitude() - QuadNodeBoundary, center.getLatitude() - QuadNodeBoundary), QuadNodeBoundary / 2);
         QuadNode topRight = new QuadNode(new GeoLocation(center.getLongitude() - QuadNodeBoundary, center.getLatitude()), QuadNodeBoundary / 2);

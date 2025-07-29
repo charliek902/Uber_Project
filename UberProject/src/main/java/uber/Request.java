@@ -5,7 +5,6 @@ public class Request {
     Integer size;
     GeoLocation start;
     GeoLocation destination;
-    String requirements;
     Trip rideType;
     Rider rider;
     Driver driver;
@@ -16,7 +15,6 @@ public class Request {
     User connectedUser;
     ClientSocket connectedUserSocket;
     Ride ride;
-    ArrayList<Integer> matchingRiderIds;
-    ArrayList<Integer> matchingDriverIds;
+    ArrayList<Driver> matchingDrivers;
     public Request(){}
 }

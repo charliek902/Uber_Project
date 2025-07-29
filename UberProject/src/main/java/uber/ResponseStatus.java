@@ -1,6 +1,6 @@
 package uber;
 
-public enum Status {
+public enum ResponseStatus {
     SUCCESS,
     FAILURE
 }

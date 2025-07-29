@@ -29,8 +29,6 @@ public class ServerSocketLayer {
                 return ServerSocketRequestHandler.handleUpdateLocation(request);
             case FIND_DRIVERS:
                 return ServerSocketRequestHandler.handleRequestDrivers(request, connectionDB);
-            case REQUEST_RIDERS:
-                return ServerSocketRequestHandler.handleRequestRiders(request, connectionDB);
             case CANCEL_TRIP:
                 return ServerSocketRequestHandler.handleCancelTrip(request);
             case COMPLETE_TRIP:
@@ -39,7 +37,7 @@ public class ServerSocketLayer {
                 return ServerSocketRequestHandler.handleSendMessage(request);
             default:
                 return new ResponseBuilder(new Response())
-                        .setStatus(Status.FAILURE)
+                        .setStatus(ResponseStatus.FAILURE)
                         .build();
         }
     }
