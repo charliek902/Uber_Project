@@ -16,7 +16,6 @@ public class ClientCreatorFactory {
     }
 
     public ArrayList<Driver> createDrivers(Integer numDrivers) {
-
         return new ArrayList<Driver>();
     }
 

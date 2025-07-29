@@ -6,18 +6,13 @@ package uber;
 import java.util.ArrayList;
 
 public class MatchingEngine {
-    // TODO: TOMORROW
-    // TODO: implement the quadtree for the matching engine for available drivers / riders
-    // TODO: implement the response and the handling of client messages on the user side
-    // TODO: implement the threading and concurrency functionality
-    // TODO: create the tests for this project...
-
 
     public ArrayList<Driver> drivers;
     public ArrayList<Rider> riders;
+    public QuadTree quadTree;
 
     public MatchingEngine() {
-        // we cannot need to implement the actual quadtree
+        this.quadTree = new QuadTree(new GeoLocation(0, 0), 1000);
     }
 
     public void addDrivers(ArrayList<Driver> drivers) {
@@ -33,13 +28,6 @@ public class MatchingEngine {
         riderIds.add(1);
         return riderIds;
     }
-
-    public ArrayList<Integer> getAvailableRiders(GeoLocation startingLocation) {
-        ArrayList<Integer> riderIds = new ArrayList<Integer>();
-        riderIds.add(2);
-        return riderIds;
-    }
-
 
 
 

@@ -5,7 +5,7 @@ public class Rider extends User{
     String requirements;
     Integer size;
 
-    public Rider(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db, Integer size) {
+    public Rider(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db, Integer size) throws Exception {
         super(id, fullName, location, email, locationService, messageService, tripService, db);
         this.size = size;
     }

@@ -1,29 +1,30 @@
 package uber;
 
 public class GeoLocation {
-    Double longitude;
-    Double latitude;
-    public GeoLocation(Double longitude, Double latitude){
+    Integer longitude;
+    Integer latitude;
+    public GeoLocation(Integer longitude, Integer latitude){
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public void setLocation(Double longitude, Double latitude){
+    public void setLocation(Integer longitude, Integer latitude){
         if (longitude == null && latitude == null) {
             return;
         }
-        if(longitude == null){
+        if (latitude != null) {
             this.latitude = latitude;
-            return;
         }
-        this.longitude = longitude;
+        if(longitude != null) {
+            this.longitude = longitude;
+        }
     }
 
-    public Double getLongitude() {
+    public Integer getLongitude() {
         return this.longitude;
     }
 
-    public Double getLatitude() {
+    public Integer getLatitude() {
         return this.latitude;
     }
 

@@ -1,0 +1,9 @@
+    // TODO: TODAY
+    // TODO: implement the quadtree for the matching engine for available drivers / riders
+    // TODO: WEDNESDAY
+    // TODO: implement the response and the handling of client messages on the user side
+    // TODO: implement the threading and concurrency functionality
+    // TODO: create the tests for this project...
+    // TODO: validator for the request builder of the project..
+    // TODO: simplify the user constructor
+    // TODO: need to create the finite state machine and strategy patterns for certain types of users

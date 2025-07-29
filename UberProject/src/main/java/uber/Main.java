@@ -2,7 +2,7 @@ package uber;
 
 public class Main {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws Exception {
         ThreadPool threads = new ThreadPool();
         ConnectionDB singleTonConnectionDB = new ConnectionDB();
         ServerSocketLayer serverSocketHandler = new ServerSocketLayer(singleTonConnectionDB);

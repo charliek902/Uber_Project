@@ -33,17 +33,6 @@ public class LocationService {
         return this.serverSocketHandler.sendMessageFromClient(request);
     }
 
-    public Response getRider(Request request) {
-        request = new RequestBuilder(request)
-                .setMatchingRiders(matchingEngine.getAvailableRiders(request.start))
-                .build();
-        Response response = serverSocketHandler.sendMessageFromClient(request);
-        if (response.status != null && response.status.equals(Status.SUCCESS)) {
-            return response;
-        }
-        return Utils.returnFailure();
-    }
-
     public Response getDriver(Request request) {
         request = new RequestBuilder(request)
                 .setMatchingDrivers(matchingEngine.getAvailableDrivers(request.start))

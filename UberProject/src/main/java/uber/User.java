@@ -20,6 +20,7 @@ abstract public class User {
     public TripService tripService;
     public ConnectionDB db;
     public ClientSocket client;
+    public UserStatus userStatus;
     ThreadPool threadPool;
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -28,22 +29,19 @@ abstract public class User {
     HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> requests;
     ConcurrentLinkedQueue<String> systemMessages = new ConcurrentLinkedQueue<>();
 
-    public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db){
+    public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db) throws Exception {
         this.fullName = fullName;
         this.currentLocation = location;
         this.rating = 0.0;
         this.pastRatings = new HashMap<String, ArrayList<Double>>();
         this.email = email;
         this.Id = id;
+        this.userStatus = UserStatus.AVAILABLE;
         this.locationService = locationService;
         this.messageService = messageService;
         this.tripService = tripService;
         this.db = db;
-
-        Boolean connected = this.createConnection();
-        if (!connected) {
-            // have to do some sort of logic to handle connection not established...
-        }
+        this.createClientWebSocketConection();
     }
 
     public Double getRating(){
@@ -103,29 +101,12 @@ abstract public class User {
         this.rating = this.setRating();
     }
 
-    private Double setRating(){
-        Double summedOverall = 0.0;
-        Integer count = 0;
-        for (ArrayList<Double> ratingsPerCustomer : pastRatings.values()) {
-            count += ratingsPerCustomer.size();
-            for (Double rating : ratingsPerCustomer) {
-                summedOverall += rating;
-            }
-        }
-        return summedOverall / count;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
-    private Boolean createConnection() {
-        try {
-            this.client = new ClientSocket(new URI("ws://localhost:8080"), this);
-            client.connectBlocking();
-            this.db.addToConnectionDB(Id, (ClientSocket) this.client);
-            return true;
-        } catch(InterruptedException e) {
-            return false;
-        } catch (URISyntaxException e) {
-            return false;
-        }
+    public UserStatus getUserStatus() {
+        return this.userStatus;
     }
 
     // update location, get location, request a ride, accept a ride
@@ -143,14 +124,38 @@ abstract public class User {
         // send to the the message service
     }
 
+    public void setThreadPool(ThreadPool threadPool) {
+        this.threadPool = threadPool;
+    }
+
     public void updateLocation(){}
 
     public void cancelTrip(){}
 
     public void completeTrip(){}
 
-    public void setThreadPool(ThreadPool threadPool) {
-        this.threadPool = threadPool;
+    private Double setRating(){
+        Double summedOverall = 0.0;
+        Integer count = 0;
+        for (ArrayList<Double> ratingsPerCustomer : pastRatings.values()) {
+            count += ratingsPerCustomer.size();
+            for (Double rating : ratingsPerCustomer) {
+                summedOverall += rating;
+            }
+        }
+        return summedOverall / count;
+    }
+
+    private void createClientWebSocketConection() throws Exception {
+        try {
+            this.client = new ClientSocket(new URI("ws://localhost:8080"), this);
+            client.connectBlocking();
+            this.db.addToConnectionDB(Id, (ClientSocket) this.client);
+        } catch(InterruptedException e) {
+            throw new Exception("InterruptedException- Client Websocket failed to create");
+        } catch (URISyntaxException e) {
+            throw new Exception("URISyntaxException- Client Websocket failed to create");
+        }
     }
 
 }
