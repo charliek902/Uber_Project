@@ -68,6 +68,33 @@ public class Driver extends User {
         Response response = this.locationService.updateLocation(request);
     }
 
+    @Override
+    public Request processRequests(String jsonMessage) {
+        Request request = super.processRequests(jsonMessage);
+        return request;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        if (this.currentRide == null) {
+            return;
+        }
+        Request request = new RequestBuilder(new Request())
+                .setStartingLocation(this.currentRide.getStartingLocation())
+                .setDestinationLocation(this.currentRide.getDestinationLocation())
+                .setPostMessage(message)
+                .setCurrentUser(this)
+                .setRider(this.rider)
+                .setDriver(this)
+                .setCurrentRequestTime(0)
+                .setTimeOut(300)
+                .setSize(this.size)
+                .setRequestType(RequestType.SEND_MESSAGE)
+                .validate()
+                .build();
+        this.messageService.sendMessage(request);
+    }
+
     public void acceptRider(Rider rider) {
         if(this.rider == null) {
             Request request = new RequestBuilder(new Request())
@@ -85,17 +112,18 @@ public class Driver extends User {
     }
 
     public void move() {
-        GeoLocation currentLocation = this.getCurrentLocation();
-        GeoLocation newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
-
-        Request request = new RequestBuilder(new Request())
-                .setStartingLocation(this.getCurrentLocation())
-                .setNewDriverLocation(newLocation)
-                .setCurrentUser(this)
-                .setRequestType(RequestType.UPDATE_LOCATION)
-                .validate()
-                .build();
-        Response response = this.locationService.updateLocation(request);
+        if(this.currentRide == null) {
+            GeoLocation currentLocation = this.getCurrentLocation();
+            GeoLocation newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
+            Request request = new RequestBuilder(new Request())
+                    .setStartingLocation(this.getCurrentLocation())
+                    .setNewDriverLocation(newLocation)
+                    .setCurrentUser(this)
+                    .setRequestType(RequestType.UPDATE_LOCATION)
+                    .validate()
+                    .build();
+            Response response = this.locationService.updateLocation(request);
+        }
     }
 
     private GeoLocation randomizeLocation(Integer longitude, Integer latitude) {

@@ -7,6 +7,10 @@ public class MessageService {
         this.serverSocketHandler = serverSocketHandler;
     }
 
+    public Response sendMessage(Request request) {
+        return this.serverSocketHandler.sendMessageFromClient(request);
+    }
+
 
 
 }

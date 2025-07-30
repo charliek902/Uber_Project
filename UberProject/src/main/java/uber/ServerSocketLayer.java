@@ -29,11 +29,10 @@ public class ServerSocketLayer {
                 return ServerSocketRequestHandler.handleUpdateLocation(request, connectionDB);
             case FIND_DRIVERS:
                 return ServerSocketRequestHandler.handleRequestDrivers(request, connectionDB);
-            case CANCEL_TRIP:
-                return ServerSocketRequestHandler.endTrip(request, connectionDB);
-            case COMPLETE_TRIP:
+            case CANCEL_TRIP, COMPLETE_TRIP:
                 return ServerSocketRequestHandler.endTrip(request, connectionDB);
             case SEND_MESSAGE:
+                System.out.println("Hits the handle message handler!");
                 return ServerSocketRequestHandler.handleSendMessage(request, connectionDB);
             case ACCEPT_RIDER:
                 return ServerSocketRequestHandler.handleAcceptRider(request, connectionDB);

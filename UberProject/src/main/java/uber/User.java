@@ -116,19 +116,13 @@ abstract public class User {
 
     // update location, get location, request a ride, accept a ride
 
-    public void addMessage(String message) {
-        System.out.println("!!! message:" + message);
-        // message gets added here...
+    public void addMessage(String jsonMessage) {
+        System.out.println("hits here 2");
+        this.processRequests(jsonMessage);
     }
 
-    public void addMessage(ByteBuffer message) {
-        // handle the type of message here...
-    }
 
-    public void sendMessage(String message) {
-        // build the request here from the message...
-        // send to the the message service
-    }
+    public void sendMessage(String message) {}
 
     public void setThreadPool(ThreadPool threadPool) {
         this.threadPool = threadPool;
@@ -137,6 +131,14 @@ abstract public class User {
     public void updateLocation() {}
 
     public void cancelTrip() {}
+
+    public Request processRequests(String jsonMessage) {
+        System.out.println("hits here 3");
+        System.out.println("json message that is processed: " + jsonMessage);
+        Request request = Utils.JSONParser(jsonMessage);
+        System.out.println("hits here 4");
+        return request;
+    }
 
     public void completeTrip() {}
 

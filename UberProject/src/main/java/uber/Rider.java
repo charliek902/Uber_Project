@@ -74,6 +74,24 @@ public class Rider extends User{
         Response response = this.locationService.updateLocation(request);
     }
 
+    @Override
+    public Request processRequests(String jsonMessage) {
+        Request request = super.processRequests(jsonMessage);
+        return request;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        if (this.currentRide == null) {
+            return;
+        }
+
+
+
+
+
+//        this.messageService.sendMessage(new Message(this.Id, this.currentDriver.Id, message));
+    }
 
     public void getDriver() {
         Request request = new RequestBuilder(new Request())

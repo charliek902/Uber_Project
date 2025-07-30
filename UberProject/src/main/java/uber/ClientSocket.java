@@ -33,11 +33,6 @@ public class ClientSocket extends WebSocketClient {
         user.addMessage(message);
     }
 
-    @Override
-    public void onMessage(ByteBuffer message) {
-        // Pass message to the user
-        user.addMessage(message);
-    }
 
     @Override
     public void send(String message) {

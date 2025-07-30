@@ -2,21 +2,15 @@ package uber;
 
 public class ServerSocketRequestHandler {
 
-    // need a better verification process over if the message was handled
-
     public static Response handleUpdateLocation(Request request, ConnectionDB db) {
-//        String json = String.format('',)
-        request.connectedUser.client.onMessage("blah");
-
+        request.connectedUser.client.onMessage(request.returnJSONParams());
         return Utils.returnFailure();
     }
 
     public static Response handleRequestDrivers(Request request, ConnectionDB db) {
         for (Driver driver : request.matchingDrivers) {
             ClientSocket socket = db.getUserConnection(driver.Id);
-
-            // TODO: check if the associated driver has accepted
-            socket.onMessage("");
+            socket.onMessage(request.returnJSONParams());
             Driver selectedDriver = (Driver) db.getUserConnection(driver.Id).getUser();
 
             if(selectedDriver != null && selectedDriver.Id == driver.Id) {
@@ -64,17 +58,18 @@ public class ServerSocketRequestHandler {
 
 
     public static Response handleSendMessage(Request request, ConnectionDB db) {
+        if(request.currentUser instanceof Driver) {
+            request.rider.client.onMessage(request.returnJSONParams());
+        } else {
+            request.driver.client.onMessage(request.returnJSONParams());
+        }
         return Utils.returnFailure();
     }
 
     public static Response handleAcceptRider(Request request, ConnectionDB db) {
-        // create the ride object here...
-        // update both the driver and rider object with the ride object
-
-
-
-        return Utils.returnFailure(); }
-
-
+        request.connectedUser.client.onMessage(request.returnJSONParams());
+        // checks on whether user has been accepted (or if another driver got them)s
+        return Utils.returnFailure();
+    }
 
 }

@@ -82,9 +82,10 @@ public class RequestBuilder {
     }
 
     public RequestBuilder validate() {
-        if (RequestValidator.validateRequest(this.request).size() != 0) {
+        ArrayList<String> missingFields = RequestValidator.validateRequest(this.request);
+        if (missingFields.size() != 0) {
             if (this.request.currentUser != null) {
-                String errorMessage = "Invalid Request. The following fields are missing: " + String.join(", ", RequestValidator.validateRequest(this.request));
+                String errorMessage = "Invalid Request. The following fields are missing: " + String.join(", ", missingFields);
                 this.request.currentUser.systemMessages.add(errorMessage);
                 this.request.requestType = RequestType.INVALID_REQUEST;
             }

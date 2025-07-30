@@ -26,9 +26,8 @@ public class Main {
         rider.setCurrentRide(currentRide);
         driver.setUserStatus(UserStatus.UNAVAILABLE);
         rider.setUserStatus(UserStatus.UNAVAILABLE);
-        driver.completeTrip();
-
-
+        driver.sendMessage("hello");
+//        driver.completeTrip();
     }
 
 
