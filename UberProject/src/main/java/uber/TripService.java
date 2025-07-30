@@ -1,5 +1,7 @@
 package uber;
 
+import java.util.ArrayList;
+
 public class TripService {
 
     ServerSocketLayer serverSocketHandler;
@@ -10,22 +12,22 @@ public class TripService {
         this.matchingEngine = matchingEngine;
     }
 
-    public void acceptRider () {
-
+    public void acceptRider (Request request) {
+        this.matchingEngine.removeDriver(request.driver);
+        this.serverSocketHandler.sendMessageFromClient(request);
     }
 
-    public void acceptDriver() {
-
+    public void endTrip(Request request) {
+        this.endTrips(request);
+        this.matchingEngine.addDriver(request.driver);
+        this.serverSocketHandler.sendMessageFromClient(request);
     }
 
-    public void cancelTrip (Request request) {
-        // when trip cancelled, we add Driver back to engine
-        // we update the other rider / driver that it has been completed
+    private void endTrips(Request request) {
+        if (request.currentUser instanceof Driver) {
+            request.driver.setCurrentRide(null);
+        } else {
+            request.rider.setCurrentRide(null);
+        }
     }
-
-    public void completeTrip(Request request) {
-        // when trip completed, we add Driver back to engine
-        // we update the other rider / driver that it has been completed
-    }
-
 }

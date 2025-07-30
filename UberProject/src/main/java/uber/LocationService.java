@@ -15,9 +15,11 @@ public class LocationService {
         Boolean driverWithNoRide = request.currentUser instanceof Driver && request.ride == null;
 
         if (driverWithNoRide) {
-            ArrayList<Driver> drivers = new ArrayList<Driver>();
-            drivers.add(request.driver);
-            this.matchingEngine.addDrivers(drivers);
+            request.driver.currentLocation = request.start;
+            this.matchingEngine.removeDriver(request.driver);
+            request.driver.currentLocation = request.newDriverLocation;
+            this.matchingEngine.addDriver(request.driver);
+
             return new ResponseBuilder(new Response())
                     .setStatus(ResponseStatus.SUCCESS)
                     .build();

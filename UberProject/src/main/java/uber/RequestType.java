@@ -6,5 +6,6 @@ public enum RequestType {
     CANCEL_TRIP,
     COMPLETE_TRIP,
     SEND_MESSAGE,
-    INVALID_REQUEST
+    INVALID_REQUEST,
+    ACCEPT_RIDER
 }

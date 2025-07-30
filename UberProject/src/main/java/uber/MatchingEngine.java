@@ -1,9 +1,9 @@
 package uber;
+import java.util.ArrayList;
 
 // this class will be the quadtree - return a list of the nearest MAX top 10 drivers (only drivers which are available will be in the mathcing engine)
 // here is where we insert and update and query by quadTrees , when we find a new match / mathces we return
 
-import java.util.ArrayList;
 
 public class MatchingEngine {
 
@@ -19,6 +19,10 @@ public class MatchingEngine {
         this.quadTree.addDrivers(drivers);
     }
 
+    public void addDriver(Driver driver) {
+        this.quadTree.addDriver(driver);
+    }
+
     public void removeDriver(Driver driver) {
         this.quadTree.removeDriver(driver);
     }
@@ -26,7 +30,5 @@ public class MatchingEngine {
     public ArrayList<Driver> getAvailableDrivers(Rider rider) {
         return this.quadTree.findAvailableDrivers(rider);
     }
-
-
 
 }

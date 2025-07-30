@@ -8,7 +8,7 @@ public class GeoLocation {
         this.longitude = longitude;
     }
 
-    public void setLocation(Integer longitude, Integer latitude){
+    public void setLocation(Integer longitude, Integer latitude) {
         if (longitude == null && latitude == null) {
             return;
         }

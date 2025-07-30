@@ -29,12 +29,26 @@ public class QuadTree {
         }
     }
 
+    public void addDriver(Driver driver) {
+
+        for (QuadNode quadNode : quadNodes) {
+            if (quadNode.checkLocationInNode(driver.getCurrentLocation())) {
+                quadNode.addDriver(driver);
+            }
+        }
+    }
+
     public void removeDriver(Driver driver) {
         for (QuadNode quadNode : quadNodes) {
             if (quadNode.checkLocationInNode(driver.getCurrentLocation())) {
                 quadNode.removeDriver(driver);
             }
         }
+    }
+
+    public ArrayList<Driver> findDrivers(Rider rider, Integer riderRadius, ArrayList<Driver> foundDrivers) {
+
+        return new ArrayList<Driver>();
     }
 
     private void buildQuadTree(GeoLocation center, Integer QuadNodeBoundary) {

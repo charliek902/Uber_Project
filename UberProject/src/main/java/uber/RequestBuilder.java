@@ -20,6 +20,11 @@ public class RequestBuilder {
         return this;
     }
 
+    public RequestBuilder setNewDriverLocation(GeoLocation location) {
+        this.request.newDriverLocation = location;
+        return this;
+    }
+
     public RequestBuilder setDestinationLocation(GeoLocation location){
         this.request.destination = location;
         return this;
@@ -40,10 +45,6 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setRideType(Trip tripType){
-        request.rideType = tripType;
-        return this;
-    }
 
     public RequestBuilder setRider(Rider rider){
         this.request.rider = rider;
@@ -72,6 +73,11 @@ public class RequestBuilder {
 
     public RequestBuilder setMatchingDrivers(ArrayList<Driver> drivers) {
         this.request.matchingDrivers = drivers;
+        return this;
+    }
+
+    public RequestBuilder setPostMessage(String postMessage) {
+        this.request.postMessage = postMessage;
         return this;
     }
 

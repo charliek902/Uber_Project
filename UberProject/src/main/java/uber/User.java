@@ -24,6 +24,7 @@ abstract public class User {
     ThreadPool threadPool;
     private final ReentrantLock lock = new ReentrantLock();
 
+
     HashMap<Integer, ConcurrentLinkedQueue<Message>> clientMessages;
     HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> clientLocation;
     HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> requests;
@@ -36,7 +37,7 @@ abstract public class User {
         this.pastRatings = new HashMap<String, ArrayList<Double>>();
         this.email = email;
         this.Id = id;
-        this.userStatus = null;
+        this.userStatus = UserStatus.STARTED;
         this.locationService = locationService;
         this.messageService = messageService;
         this.tripService = tripService;
@@ -109,9 +110,14 @@ abstract public class User {
         return this.userStatus;
     }
 
+    public String toJSON() {
+        return "";
+    }
+
     // update location, get location, request a ride, accept a ride
 
     public void addMessage(String message) {
+        System.out.println("!!! message:" + message);
         // message gets added here...
     }
 
@@ -128,11 +134,11 @@ abstract public class User {
         this.threadPool = threadPool;
     }
 
-    public void updateLocation(){}
+    public void updateLocation() {}
 
-    public void cancelTrip(){}
+    public void cancelTrip() {}
 
-    public void completeTrip(){}
+    public void completeTrip() {}
 
     private Double setRating(){
         Double summedOverall = 0.0;
@@ -147,15 +153,17 @@ abstract public class User {
     }
 
     private void createClientWebSocketConection() throws Exception {
+
         try {
+            System.out.println("!!! before the client socket");
             this.client = new ClientSocket(new URI("ws://localhost:8080"), this);
             client.connectBlocking();
-            this.db.addToConnectionDB(Id, (ClientSocket) this.client);
+            this.db.addToConnectionDB(Id, this.client);
         } catch(InterruptedException e) {
+            System.out.println("!!! hits the catch exceptions");
             throw new Exception("InterruptedException- Client Websocket failed to create");
         } catch (URISyntaxException e) {
             throw new Exception("URISyntaxException- Client Websocket failed to create");
         }
     }
-
 }

@@ -7,6 +7,4 @@ public class Utils {
                 .setStatus(ResponseStatus.FAILURE)
                 .build();
     }
-
-
 }

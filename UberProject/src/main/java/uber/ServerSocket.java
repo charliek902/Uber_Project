@@ -13,7 +13,9 @@ public class ServerSocket extends WebSocketServer {
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {}
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+
+    }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
