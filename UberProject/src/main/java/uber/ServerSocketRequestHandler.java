@@ -3,14 +3,14 @@ package uber;
 public class ServerSocketRequestHandler {
 
     public static Response handleUpdateLocation(Request request, ConnectionDB db) {
-        request.connectedUser.client.onMessage(request.returnJSONParams());
+        request.connectedUser.client.onMessage(Utils.jsonSerialize(request));
         return Utils.returnFailure();
     }
 
     public static Response handleRequestDrivers(Request request, ConnectionDB db) {
         for (Driver driver : request.matchingDrivers) {
             ClientSocket socket = db.getUserConnection(driver.Id);
-            socket.onMessage(request.returnJSONParams());
+            socket.onMessage(Utils.jsonSerialize(request));
             Driver selectedDriver = (Driver) db.getUserConnection(driver.Id).getUser();
 
             if(selectedDriver != null && selectedDriver.Id == driver.Id) {
@@ -31,7 +31,7 @@ public class ServerSocketRequestHandler {
             socket = db.getUserConnection(request.driver.Id);
         }
 
-        socket.onMessage(request.returnJSONParams());
+        socket.onMessage(Utils.jsonSerialize(request));
 
         if (request.currentUser instanceof Driver) {
             request.driver.setCurrentRide(null);
@@ -59,15 +59,15 @@ public class ServerSocketRequestHandler {
 
     public static Response handleSendMessage(Request request, ConnectionDB db) {
         if(request.currentUser instanceof Driver) {
-            request.rider.client.onMessage(request.returnJSONParams());
+            request.rider.client.onMessage(Utils.jsonSerialize(request));
         } else {
-            request.driver.client.onMessage(request.returnJSONParams());
+            request.driver.client.onMessage(Utils.jsonSerialize(request));
         }
         return Utils.returnFailure();
     }
 
     public static Response handleAcceptRider(Request request, ConnectionDB db) {
-        request.connectedUser.client.onMessage(request.returnJSONParams());
+        request.connectedUser.client.onMessage(Utils.jsonSerialize(request));
         // checks on whether user has been accepted (or if another driver got them)s
         return Utils.returnFailure();
     }

@@ -36,8 +36,7 @@ public class Rider extends User{
     public void cancelTrip(){
         Request request = new RequestBuilder(new Request())
                 .setCurrentUser(this)
-                .setRider(this)
-                .setDriver(this.currentDriver)
+                .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
                 .setSize(this.size)
@@ -51,8 +50,7 @@ public class Rider extends User{
     public void completeTrip(){
         Request request = new RequestBuilder(new Request())
                 .setCurrentUser(this)
-                .setRider(this)
-                .setDriver(this.currentDriver)
+                .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
                 .setSize(this.size)
@@ -64,14 +62,21 @@ public class Rider extends User{
 
     @Override
     public void updateLocation() {
-        Request request = new RequestBuilder(new Request())
-                .setStartingLocation(this.currentLocation)
-                .setCurrentUser(this)
-                .setRide(this.getCurrentRide())
-                .setRequestType(RequestType.UPDATE_LOCATION)
-                .validate()
-                .build();
-        Response response = this.locationService.updateLocation(request);
+        if (this.currentRide != null) {
+            Request request = new RequestBuilder(new Request())
+                    .setStartingLocation(this.currentLocation)
+                    .setCurrentUser(this)
+                    .setRide(this.getCurrentRide())
+                    .setRequestType(RequestType.UPDATE_LOCATION)
+                    .setNotification(
+                            new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                                    .setNotificationType(RequestType.UPDATE_LOCATION)
+                                    .build()
+                    )
+                    .validate()
+                    .build();
+            Response response = this.locationService.updateLocation(request);
+        }
     }
 
     @Override
@@ -86,16 +91,17 @@ public class Rider extends User{
             return;
         }
 
-
-
-
-
 //        this.messageService.sendMessage(new Message(this.Id, this.currentDriver.Id, message));
     }
 
     public void getDriver() {
         Request request = new RequestBuilder(new Request())
                 .setRequestType(RequestType.FIND_DRIVERS)
+                .setNotification(
+                        new NotificationBuilder(new Notification(this.Id, null))
+                                .setNotificationType(RequestType.FIND_DRIVERS)
+                                .build()
+                )
                 .setStartingLocation(this.currentLocation)
                 .setCurrentUser(this)
                 .validate()

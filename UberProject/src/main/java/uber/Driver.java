@@ -29,8 +29,7 @@ public class Driver extends User {
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
                 .setCurrentUser(this)
-                .setRider(this.rider)
-                .setDriver(this)
+                .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
                 .setSize(this.size)
@@ -46,8 +45,7 @@ public class Driver extends User {
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
                 .setCurrentUser(this)
-                .setRider(this.rider)
-                .setDriver(this)
+                .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
                 .setSize(this.size)
@@ -59,13 +57,32 @@ public class Driver extends User {
 
     @Override
     public void updateLocation() {
-        Request request = new RequestBuilder(new Request())
-                .setStartingLocation(this.currentLocation)
-                .setCurrentUser(this)
-                .setRequestType(RequestType.UPDATE_LOCATION)
-                .validate()
-                .build();
-        Response response = this.locationService.updateLocation(request);
+        if(this.currentRide == null) {
+            GeoLocation currentLocation = this.getCurrentLocation();
+            GeoLocation newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
+            Request request = new RequestBuilder(new Request())
+                    .setStartingLocation(this.getCurrentLocation())
+                    .setNewDriverLocation(newLocation)
+                    .setCurrentUser(this)
+                    .setRequestType(RequestType.UPDATE_LOCATION)
+                    .validate()
+                    .build();
+            Response response = this.locationService.updateLocation(request);
+        } else {
+            Request request = new RequestBuilder(new Request())
+                    .setStartingLocation(this.currentLocation)
+                    .setNotification(
+                            new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                            .setNotificationType(RequestType.UPDATE_LOCATION)
+                            .build()
+                    )
+                    .setCurrentUser(this)
+                    .setRide(this.currentRide)
+                    .setRequestType(RequestType.UPDATE_LOCATION)
+                    .validate()
+                    .build();
+            Response response = this.locationService.updateLocation(request);
+        }
     }
 
     @Override
@@ -79,13 +96,19 @@ public class Driver extends User {
         if (this.currentRide == null) {
             return;
         }
+
+
         Request request = new RequestBuilder(new Request())
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
-                .setPostMessage(message)
+                .setNotification(
+                        new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                                .setNotificationType(RequestType.SEND_MESSAGE)
+                                .setNotificationBody(message)
+                                .build()
+                )
                 .setCurrentUser(this)
-                .setRider(this.rider)
-                .setDriver(this)
+                .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
                 .setSize(this.size)
@@ -99,8 +122,11 @@ public class Driver extends User {
         if(this.rider == null) {
             Request request = new RequestBuilder(new Request())
                     .setCurrentUser(this)
-                    .setRider(rider)
-                    .setDriver(this)
+                    .setNotification(
+                            new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                                    .setNotificationType(RequestType.ACCEPT_RIDER)
+                                    .build()
+                    )
                     .setCurrentRequestTime(0)
                     .setTimeOut(300)
                     .setSize(this.size)
@@ -112,18 +138,7 @@ public class Driver extends User {
     }
 
     public void move() {
-        if(this.currentRide == null) {
-            GeoLocation currentLocation = this.getCurrentLocation();
-            GeoLocation newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
-            Request request = new RequestBuilder(new Request())
-                    .setStartingLocation(this.getCurrentLocation())
-                    .setNewDriverLocation(newLocation)
-                    .setCurrentUser(this)
-                    .setRequestType(RequestType.UPDATE_LOCATION)
-                    .validate()
-                    .build();
-            Response response = this.locationService.updateLocation(request);
-        }
+        this.updateLocation();
     }
 
     private GeoLocation randomizeLocation(Integer longitude, Integer latitude) {

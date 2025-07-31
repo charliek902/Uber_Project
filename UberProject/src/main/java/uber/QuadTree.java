@@ -46,11 +46,6 @@ public class QuadTree {
         }
     }
 
-    public ArrayList<Driver> findDrivers(Rider rider, Integer riderRadius, ArrayList<Driver> foundDrivers) {
-
-        return new ArrayList<Driver>();
-    }
-
     private void buildQuadTree(GeoLocation center, Integer QuadNodeBoundary) {
         QuadNode topLeft = new QuadNode(new GeoLocation(center.getLongitude() - QuadNodeBoundary, center.getLatitude() - QuadNodeBoundary), QuadNodeBoundary / 2);
         QuadNode topRight = new QuadNode(new GeoLocation(center.getLongitude() - QuadNodeBoundary, center.getLatitude()), QuadNodeBoundary / 2);

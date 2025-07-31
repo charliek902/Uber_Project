@@ -15,10 +15,10 @@ public class LocationService {
         Boolean driverWithNoRide = request.currentUser instanceof Driver && request.ride == null;
 
         if (driverWithNoRide) {
-            request.driver.currentLocation = request.start;
-            this.matchingEngine.removeDriver(request.driver);
-            request.driver.currentLocation = request.newDriverLocation;
-            this.matchingEngine.addDriver(request.driver);
+            request.currentUser.currentLocation = request.start;
+            this.matchingEngine.removeDriver((Driver) request.currentUser);
+            request.currentUser.currentLocation = request.newDriverLocation;
+            this.matchingEngine.addDriver((Driver) request.currentUser);
 
             return new ResponseBuilder(new Response())
                     .setStatus(ResponseStatus.SUCCESS)
@@ -28,12 +28,15 @@ public class LocationService {
     }
 
     public Response getDriver(Request request) {
-        request = new RequestBuilder(request)
-                .setMatchingDrivers(matchingEngine.getAvailableDrivers(request.rider))
-                .build();
-        Response response = serverSocketHandler.sendMessageFromClient(request);
-        if (response.status != null && response.status.equals(ResponseStatus.SUCCESS)) {
-            return response;
+        if (request.currentUser instanceof Rider) {
+            request = new RequestBuilder(request)
+                    .setMatchingDrivers(matchingEngine.getAvailableDrivers((Rider) request.currentUser))
+                    .build();
+            Response response = serverSocketHandler.sendMessageFromClient(request);
+            if (response.status != null && response.status.equals(ResponseStatus.SUCCESS)) {
+                return response;
+            }
+            return Utils.returnFailure();
         }
         return Utils.returnFailure();
     }

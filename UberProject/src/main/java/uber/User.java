@@ -2,7 +2,6 @@ package uber;
 import org.java_websocket.client.WebSocketClient;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -135,8 +134,9 @@ abstract public class User {
     public Request processRequests(String jsonMessage) {
         System.out.println("hits here 3");
         System.out.println("json message that is processed: " + jsonMessage);
-        Request request = Utils.JSONParser(jsonMessage);
-        System.out.println("hits here 4");
+        Request request = Utils.jsonDeserialize(jsonMessage);
+
+        System.out.println("check out the driver Id: " + request.requestType.toString());
         return request;
     }
 

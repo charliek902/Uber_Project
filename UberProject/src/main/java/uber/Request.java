@@ -2,21 +2,22 @@ package uber;
 import java.util.ArrayList;
 
 public class Request {
-    Integer size;
-    GeoLocation start;
-    GeoLocation newDriverLocation;
-    GeoLocation destination;
-    Rider rider;
-    Driver driver;
-    RequestType requestType;
-    Integer time;
-    Integer timeout;
-    User currentUser;
-    User connectedUser;
-    ClientSocket connectedUserSocket;
-    Ride ride;
-    String postMessage;
-    ArrayList<Driver> matchingDrivers;
+    public Integer size;
+    public GeoLocation start;
+    public GeoLocation newDriverLocation;
+    public GeoLocation destination;
+    public Rider rider;
+    public Driver driver;
+    public RequestType requestType;
+    public Notification notification;
+    public Integer time;
+    public Integer timeout;
+    public User currentUser;
+    public User connectedUser;
+    public ClientSocket connectedUserSocket;
+    public Ride ride;
+    public String postMessage;
+    public ArrayList<Driver> matchingDrivers;
     public Request(){}
 
     public String returnJSONParams() {

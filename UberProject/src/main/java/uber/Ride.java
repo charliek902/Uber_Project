@@ -2,10 +2,10 @@ package uber;
 
 public class Ride {
 
-    private GeoLocation startingLocation;
-    private GeoLocation destinationLocation;
-    private Driver currentDriver;
-    private Rider currentRider;
+    public GeoLocation startingLocation;
+    public GeoLocation destinationLocation;
+    public Driver currentDriver;
+    public Rider currentRider;
 
 
     public Ride(Rider rider, Driver driver, Request req){

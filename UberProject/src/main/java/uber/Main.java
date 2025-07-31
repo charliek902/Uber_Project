@@ -23,6 +23,7 @@ public class Main {
         Ride currentRide = new Ride(rider, driver, req);
         driver.setCurrentRider(rider);
         driver.setCurrentRide(currentRide);
+        rider.setCurrentDriver(driver);
         rider.setCurrentRide(currentRide);
         driver.setUserStatus(UserStatus.UNAVAILABLE);
         rider.setUserStatus(UserStatus.UNAVAILABLE);

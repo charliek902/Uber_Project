@@ -45,7 +45,6 @@ public class RequestBuilder {
         return this;
     }
 
-
     public RequestBuilder setRider(Rider rider){
         this.request.rider = rider;
         return this;
@@ -78,6 +77,11 @@ public class RequestBuilder {
 
     public RequestBuilder setPostMessage(String postMessage) {
         this.request.postMessage = postMessage;
+        return this;
+    }
+
+    public RequestBuilder setNotification(Notification notification) {
+        this.request.notification = notification;
         return this;
     }
 

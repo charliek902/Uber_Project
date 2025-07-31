@@ -13,13 +13,13 @@ public class TripService {
     }
 
     public void acceptRider (Request request) {
-        this.matchingEngine.removeDriver(request.driver);
+        this.matchingEngine.removeDriver((Driver) request.currentUser);
         this.serverSocketHandler.sendMessageFromClient(request);
     }
 
     public void endTrip(Request request) {
         this.endTrips(request);
-        this.matchingEngine.addDriver(request.driver);
+        this.matchingEngine.addDriver((Driver) request.currentUser);
         this.serverSocketHandler.sendMessageFromClient(request);
     }
 

@@ -10,7 +10,4 @@ public class MessageService {
     public Response sendMessage(Request request) {
         return this.serverSocketHandler.sendMessageFromClient(request);
     }
-
-
-
 }
