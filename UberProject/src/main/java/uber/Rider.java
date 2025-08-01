@@ -11,14 +11,6 @@ public class Rider extends User{
         this.size = size;
     }
 
-    public Driver getCurrentDriver(){
-        return currentDriver;
-    }
-
-    public void setCurrentDriver(Driver driver){
-        this.currentDriver = driver;
-    }
-
     public void move() {
         if (this.currentRide == null) {
             this.setCurrentLocation(this.randomizeLocation(this.getCurrentLocation().getLongitude(), this.getCurrentLocation().getLatitude()));
@@ -98,6 +90,13 @@ public class Rider extends User{
                 case FIND_DRIVERS, CANCEL_TRIP, COMPLETE_TRIP:
                     ConcurrentLinkedQueue<Notification> requestsQueue = requests.get(request.notification.sender);
                     requestsQueue.add(request.notification);
+                    System.out.println("WHEKLRNEWKLNSFNLK");
+
+                    System.out.println("body: " + request.notification.body);
+                    System.out.println(request.requestType);
+                    System.out.println("requests queue rider size: " + requestsQueue.size());
+                default:
+
             }
         }
         return null;
@@ -112,7 +111,9 @@ public class Rider extends User{
 //        this.messageService.sendMessage(new Message(this.Id, this.currentDriver.Id, message));
     }
 
-    public void getDriver() {
+
+
+    public void getDriver(GeoLocation destination) {
         Request request = new RequestBuilder(new Request())
                 .setRequestType(RequestType.FIND_DRIVERS)
                 .setNotification(
@@ -122,10 +123,11 @@ public class Rider extends User{
                                 .build()
                 )
                 .setStartingLocation(this.currentLocation)
+                .setDestinationLocation(destination)
                 .setCurrentUser(this)
                 .validate()
                 .build();
         Response response = this.locationService.getDriver(request);
-        this.setCurrentDriver(response.driver);
+        this.setCurrentRide(new Ride(this, response.driver, this.currentLocation, destination));
     }
 }

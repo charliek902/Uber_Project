@@ -18,16 +18,9 @@ public class TripService {
     }
 
     public void endTrip(Request request) {
-        this.endTrips(request);
+        request.currentUser.setCurrentRide(null);
         this.matchingEngine.addDriver((Driver) request.currentUser);
         this.serverSocketHandler.sendMessageFromClient(request);
     }
 
-    private void endTrips(Request request) {
-        if (request.currentUser instanceof Driver) {
-            request.driver.setCurrentRide(null);
-        } else {
-            request.rider.setCurrentRide(null);
-        }
-    }
 }

@@ -18,6 +18,8 @@ public class ServerSocketLayer {
 
     public Response sendMessageFromClient(Request request) {
 
+        System.out.println("!!! goes here twice? " + request.requestType);
+
         switch (request.requestType) {
             case UPDATE_LOCATION:
                 return ServerSocketRequestHandler.handleUpdateLocation(request, connectionDB);

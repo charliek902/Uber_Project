@@ -31,31 +31,36 @@ public class ServerSocketRequestHandler {
 
     public static Response endTrip(Request request, ConnectionDB db) {
         ClientSocket socket = getConnectedUserSocket(request, db);
+        Integer connectedUserId;
         if (socket == null) {
             return Utils.returnFailure();
         }
+        // get the id of the connnected user id to verify if the request to the socket was succesful
+        if (request.currentUser instanceof Driver) {
+            connectedUserId = request.ride.currentRider.Id;
+        } else {
+            connectedUserId = request.ride.currentDriver.Id;
+        }
+
         socket.onMessage(Utils.jsonSerialize(request));
 
+
         if (request.currentUser instanceof Driver) {
-            request.driver.setCurrentRide(null);
-            Rider selectedRider = (Rider) db.getUserConnection(request.rider.Id).getUser();
-            if(selectedRider != null && selectedRider.userStatus == UserStatus.FINISHED) {
+//            Rider selectedRider = (Rider) db.getUserConnection(connectedUserId).getUser();
+//            if(selectedRider != null && selectedRider.userStatus == UserStatus.FINISHED) {
                 return new ResponseBuilder(new Response())
                         .setStatus(ResponseStatus.SUCCESS)
-                        .setRider(selectedRider)
                         .build();
-            }
-            return Utils.returnFailure();
+//            }
+//            return Utils.returnFailure();
         } else {
-            request.rider.setCurrentRide(null);
-            Driver selectedDriver = (Driver) db.getUserConnection(request.driver.Id).getUser();
-            if(selectedDriver != null && selectedDriver.userStatus == UserStatus.FINISHED) {
+//            Driver selectedDriver = (Driver) db.getUserConnection(connectedUserId).getUser();
+//            if(selectedDriver != null && selectedDriver.userStatus == UserStatus.FINISHED) {
                 return new ResponseBuilder(new Response())
                         .setStatus(ResponseStatus.SUCCESS)
-                        .setDriver(selectedDriver)
                         .build();
-            }
-            return Utils.returnFailure();
+//            }
+//            return Utils.returnFailure();
         }
     }
 

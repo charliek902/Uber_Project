@@ -23,4 +23,5 @@ public class Request {
     public Ride ride;
     public ArrayList<Driver> matchingDrivers;
     public Request(){}
+
 }

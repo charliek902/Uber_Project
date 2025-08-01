@@ -116,7 +116,6 @@ abstract public class User {
         this.handleIncomingRequests(jsonMessage);
     }
 
-
     public void sendMessage(String message) {}
 
     public void setThreadPool(ThreadPool threadPool) {

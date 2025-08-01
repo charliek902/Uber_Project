@@ -8,9 +8,9 @@ public class Ride {
     public Rider currentRider;
 
 
-    public Ride(Rider rider, Driver driver, Request req){
-        this.startingLocation = req.start;
-        this.destinationLocation = req.destination;
+    public Ride(Rider rider, Driver driver, GeoLocation destination, GeoLocation startingLocation){
+        this.startingLocation = startingLocation;
+        this.destinationLocation = destination;
         this.currentDriver = driver;
         this.currentRider = rider;
     }

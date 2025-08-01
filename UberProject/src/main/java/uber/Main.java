@@ -15,20 +15,15 @@ public class Main {
         Driver driver = new Driver(1, null, new GeoLocation(100, 100), null, locationService, messageService, tripService, singleTonConnectionDB, 1);
         Rider rider = new Rider(2, null, new GeoLocation(100, 120), null, locationService, messageService, tripService, singleTonConnectionDB,  1);
 
-        Request req = new RequestBuilder(new Request())
-                .setStartingLocation(rider.getCurrentLocation())
-                .setDestinationLocation(driver.getCurrentLocation())
-                .build();
-        Ride currentRide = new Ride(rider, driver, req);
-        driver.setCurrentRider(rider);
+        Ride currentRide = new Ride(rider, driver, rider.getCurrentLocation(), driver.getCurrentLocation());
         driver.setCurrentRide(currentRide);
-        rider.setCurrentDriver(driver);
         rider.setCurrentRide(currentRide);
         driver.setUserStatus(UserStatus.UNAVAILABLE);
         rider.setUserStatus(UserStatus.UNAVAILABLE);
 //        driver.move();
 //        driver.sendMessage("hello");
-//        driver.completeTrip();
+        driver.completeTrip();
+//        driver.cancelTrip();
     }
 
 

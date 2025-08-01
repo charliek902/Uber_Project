@@ -15,13 +15,6 @@ public class Driver extends User {
         this.isLocked = false;
     }
 
-    public void setCurrentRider(Rider rider){
-        this.rider = rider;
-    }
-
-    public Rider getCurrentRider(){
-        return this.rider;
-    }
 
 
     @Override
@@ -30,6 +23,12 @@ public class Driver extends User {
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
                 .setCurrentUser(this)
+                .setNotification(
+                        new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                                .setNotificationType(RequestType.CANCEL_TRIP)
+                                .setNotificationVisibility(false)
+                                .build()
+                )
                 .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
@@ -46,6 +45,12 @@ public class Driver extends User {
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
                 .setCurrentUser(this)
+                .setNotification(
+                        new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
+                                .setNotificationType(RequestType.COMPLETE_TRIP)
+                                .setNotificationVisibility(false)
+                                .build()
+                )
                 .setRide(this.currentRide)
                 .setCurrentRequestTime(0)
                 .setTimeOut(300)
