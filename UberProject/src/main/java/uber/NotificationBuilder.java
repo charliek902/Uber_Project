@@ -13,8 +13,8 @@ public class NotificationBuilder {
         return this;
     }
 
-    public NotificationBuilder setNotificationBody(String message) {
-        this.notification.notification = message;
+    public NotificationBuilder setNotificationBody(Object message) {
+        this.notification.body = message;
         return this;
     }
 

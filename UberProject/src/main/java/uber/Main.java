@@ -6,7 +6,6 @@ public class Main {
 //        ThreadPool threads = new ThreadPool();
         ConnectionDB singleTonConnectionDB = new ConnectionDB();
         ServerSocketLayer serverSocketHandler = new ServerSocketLayer(singleTonConnectionDB);
-        // all services need to run concurrently ...
         MatchingEngine matchingEngine = new MatchingEngine();
         LocationService locationService = new LocationService(serverSocketHandler, matchingEngine);
         MessageService messageService = new MessageService(serverSocketHandler);
@@ -27,7 +26,8 @@ public class Main {
         rider.setCurrentRide(currentRide);
         driver.setUserStatus(UserStatus.UNAVAILABLE);
         rider.setUserStatus(UserStatus.UNAVAILABLE);
-        driver.sendMessage("hello");
+//        driver.move();
+//        driver.sendMessage("hello");
 //        driver.completeTrip();
     }
 

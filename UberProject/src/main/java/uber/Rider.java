@@ -1,5 +1,7 @@
 package uber;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class Rider extends User{
     Driver currentDriver;
     Integer size;
@@ -61,7 +63,7 @@ public class Rider extends User{
     }
 
     @Override
-    public void updateLocation() {
+    public void updateLocation(GeoLocation oldLocation, GeoLocation newLocation) {
         if (this.currentRide != null) {
             Request request = new RequestBuilder(new Request())
                     .setStartingLocation(this.currentLocation)
@@ -71,6 +73,7 @@ public class Rider extends User{
                     .setNotification(
                             new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
                                     .setNotificationType(RequestType.UPDATE_LOCATION)
+                                    .setNotificationVisibility(false)
                                     .build()
                     )
                     .validate()
@@ -80,9 +83,24 @@ public class Rider extends User{
     }
 
     @Override
-    public Request processRequests(String jsonMessage) {
-        Request request = super.processRequests(jsonMessage);
-        return request;
+    public Request handleIncomingRequests(String jsonMessage) {
+        Request request = super.handleIncomingRequests(jsonMessage);
+        if(request != null) {
+            switch (request.requestType) {
+                case SEND_MESSAGE:
+                    ConcurrentLinkedQueue<Notification> messagesQueue = clientMessages.get(request.notification.sender);
+                    messagesQueue.add(request.notification);
+                    System.out.println("messages size rider: " + messagesQueue.size());
+                case UPDATE_LOCATION:
+                    ConcurrentLinkedQueue<Notification> locationQueue = clientLocation.get(request.notification.sender);
+                    locationQueue.add(request.notification);
+                    System.out.println("location size rider: " + locationQueue.size());
+                case FIND_DRIVERS, CANCEL_TRIP, COMPLETE_TRIP:
+                    ConcurrentLinkedQueue<Notification> requestsQueue = requests.get(request.notification.sender);
+                    requestsQueue.add(request.notification);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -100,6 +118,7 @@ public class Rider extends User{
                 .setNotification(
                         new NotificationBuilder(new Notification(this.Id, null))
                                 .setNotificationType(RequestType.FIND_DRIVERS)
+                                .setNotificationVisibility(false)
                                 .build()
                 )
                 .setStartingLocation(this.currentLocation)

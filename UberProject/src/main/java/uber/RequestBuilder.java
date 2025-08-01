@@ -20,8 +20,13 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setNewDriverLocation(GeoLocation location) {
-        this.request.newDriverLocation = location;
+    public RequestBuilder setNewLocation(GeoLocation location) {
+        this.request.newLocation = location;
+        return this;
+    }
+
+    public RequestBuilder setPastLocation(GeoLocation pastLocation) {
+        this.request.pastLocation = pastLocation;
         return this;
     }
 
@@ -40,20 +45,10 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setUserClientConnection(ClientSocket socket) {
-        this.request.connectedUserSocket = socket;
-        return this;
-    }
-
-    public RequestBuilder setRider(Rider rider){
-        this.request.rider = rider;
-        return this;
-    }
-
-    public RequestBuilder setDriver(Driver driver){
-        this.request.driver = driver;
-        return this;
-    }
+//    public RequestBuilder setUserClientConnection(ClientSocket socket) {
+//        this.request.connectedUserSocket = socket;
+//        return this;
+//    }
 
     public RequestBuilder setRequestType(RequestType type){
         this.request.requestType = type;
@@ -75,10 +70,6 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setPostMessage(String postMessage) {
-        this.request.postMessage = postMessage;
-        return this;
-    }
 
     public RequestBuilder setNotification(Notification notification) {
         this.request.notification = notification;

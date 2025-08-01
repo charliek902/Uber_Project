@@ -1,7 +1,5 @@
 package uber;
 
-import java.util.ArrayList;
-
 public class LocationService {
     ServerSocketLayer serverSocketHandler;
     MatchingEngine matchingEngine;
@@ -15,9 +13,9 @@ public class LocationService {
         Boolean driverWithNoRide = request.currentUser instanceof Driver && request.ride == null;
 
         if (driverWithNoRide) {
-            request.currentUser.currentLocation = request.start;
+            request.currentUser.currentLocation = request.pastLocation;
             this.matchingEngine.removeDriver((Driver) request.currentUser);
-            request.currentUser.currentLocation = request.newDriverLocation;
+            request.currentUser.currentLocation = request.newLocation;
             this.matchingEngine.addDriver((Driver) request.currentUser);
 
             return new ResponseBuilder(new Response())

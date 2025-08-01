@@ -1,4 +1,5 @@
 package uber;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.java_websocket.client.WebSocketClient;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,15 +19,15 @@ abstract public class User {
     public MessageService messageService;
     public TripService tripService;
     public ConnectionDB db;
+    @JsonIgnore
     public ClientSocket client;
     public UserStatus userStatus;
     ThreadPool threadPool;
     private final ReentrantLock lock = new ReentrantLock();
 
-
-    HashMap<Integer, ConcurrentLinkedQueue<Message>> clientMessages;
-    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> clientLocation;
-    HashMap<Integer, ConcurrentLinkedQueue<GeoLocation>> requests;
+    HashMap<Integer, ConcurrentLinkedQueue<Notification>> clientMessages = new HashMap<Integer, ConcurrentLinkedQueue<Notification>>();
+    HashMap<Integer, ConcurrentLinkedQueue<Notification>> clientLocation = new HashMap<Integer, ConcurrentLinkedQueue<Notification>>();
+    HashMap<Integer, ConcurrentLinkedQueue<Notification>> requests = new HashMap<Integer, ConcurrentLinkedQueue<Notification>>();
     ConcurrentLinkedQueue<String> systemMessages = new ConcurrentLinkedQueue<>();
 
     public User(Integer id, String fullName, GeoLocation location, String email, LocationService locationService, MessageService messageService, TripService tripService, ConnectionDB db) throws Exception {
@@ -109,15 +110,10 @@ abstract public class User {
         return this.userStatus;
     }
 
-    public String toJSON() {
-        return "";
-    }
-
     // update location, get location, request a ride, accept a ride
 
     public void addMessage(String jsonMessage) {
-        System.out.println("hits here 2");
-        this.processRequests(jsonMessage);
+        this.handleIncomingRequests(jsonMessage);
     }
 
 
@@ -127,20 +123,33 @@ abstract public class User {
         this.threadPool = threadPool;
     }
 
-    public void updateLocation() {}
+    public void updateLocation(GeoLocation oldLocation, GeoLocation newLocation) {
+
+    }
 
     public void cancelTrip() {}
 
-    public Request processRequests(String jsonMessage) {
-        System.out.println("hits here 3");
-        System.out.println("json message that is processed: " + jsonMessage);
+    public Request handleIncomingRequests(String jsonMessage) {
         Request request = Utils.jsonDeserialize(jsonMessage);
-
-        System.out.println("check out the driver Id: " + request.requestType.toString());
+        if(request == null || request.notification == null || request.notification.sender == null) {
+            return null;
+        }
+        if(!clientMessages.containsKey(request.notification.sender)) {
+            clientMessages.put(request.notification.sender, new ConcurrentLinkedQueue<>());
+        }
+        if(!clientLocation.containsKey(request.notification.sender)) {
+            clientLocation.put(request.notification.sender, new ConcurrentLinkedQueue<>());
+        }
+        if(!requests.containsKey(request.notification.sender)) {
+            requests.put(request.notification.sender, new ConcurrentLinkedQueue<>());
+        }
         return request;
     }
 
-    public void completeTrip() {}
+
+    public void completeTrip() {
+
+    }
 
     private Double setRating(){
         Double summedOverall = 0.0;

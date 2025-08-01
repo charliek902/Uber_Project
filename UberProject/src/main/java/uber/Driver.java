@@ -1,5 +1,6 @@
 package uber;
-import java.util.ArrayList;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Driver extends User {
     public Integer size;
@@ -56,13 +57,11 @@ public class Driver extends User {
     }
 
     @Override
-    public void updateLocation() {
+    public void updateLocation(GeoLocation oldLocation, GeoLocation newLocation) {
         if(this.currentRide == null) {
-            GeoLocation currentLocation = this.getCurrentLocation();
-            GeoLocation newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
             Request request = new RequestBuilder(new Request())
-                    .setStartingLocation(this.getCurrentLocation())
-                    .setNewDriverLocation(newLocation)
+                    .setPastLocation(this.getCurrentLocation())
+                    .setNewLocation(newLocation)
                     .setCurrentUser(this)
                     .setRequestType(RequestType.UPDATE_LOCATION)
                     .validate()
@@ -70,10 +69,12 @@ public class Driver extends User {
             Response response = this.locationService.updateLocation(request);
         } else {
             Request request = new RequestBuilder(new Request())
-                    .setStartingLocation(this.currentLocation)
+                    .setPastLocation(this.getCurrentLocation())
+                    .setNewLocation(newLocation)
                     .setNotification(
                             new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
                             .setNotificationType(RequestType.UPDATE_LOCATION)
+                            .setNotificationVisibility(false)
                             .build()
                     )
                     .setCurrentUser(this)
@@ -86,9 +87,23 @@ public class Driver extends User {
     }
 
     @Override
-    public Request processRequests(String jsonMessage) {
-        Request request = super.processRequests(jsonMessage);
-        return request;
+    public Request handleIncomingRequests(String jsonMessage) {
+        Request request = super.handleIncomingRequests(jsonMessage);
+        if(request != null) {
+            switch (request.requestType) {
+                case SEND_MESSAGE:
+                    ConcurrentLinkedQueue<Notification> messagesQueue = clientMessages.get(request.notification.sender);
+                    messagesQueue.add(request.notification);
+                    System.out.println("messages size: " + messagesQueue.size());
+                case UPDATE_LOCATION:
+                    ConcurrentLinkedQueue<Notification> locationQueue = clientLocation.get(request.notification.sender);
+                    locationQueue.add(request.notification);
+                case CANCEL_TRIP, COMPLETE_TRIP, ACCEPT_RIDER:
+                    ConcurrentLinkedQueue<Notification> requestsQueue = requests.get(request.notification.sender);
+                    requestsQueue.add(request.notification);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -96,8 +111,6 @@ public class Driver extends User {
         if (this.currentRide == null) {
             return;
         }
-
-
         Request request = new RequestBuilder(new Request())
                 .setStartingLocation(this.currentRide.getStartingLocation())
                 .setDestinationLocation(this.currentRide.getDestinationLocation())
@@ -105,6 +118,7 @@ public class Driver extends User {
                         new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
                                 .setNotificationType(RequestType.SEND_MESSAGE)
                                 .setNotificationBody(message)
+                                .setNotificationVisibility(false)
                                 .build()
                 )
                 .setCurrentUser(this)
@@ -125,6 +139,7 @@ public class Driver extends User {
                     .setNotification(
                             new NotificationBuilder(new Notification(this.Id, this.currentRide.currentRider.Id))
                                     .setNotificationType(RequestType.ACCEPT_RIDER)
+                                    .setNotificationVisibility(false)
                                     .build()
                     )
                     .setCurrentRequestTime(0)
@@ -138,7 +153,26 @@ public class Driver extends User {
     }
 
     public void move() {
-        this.updateLocation();
+        GeoLocation newLocation = new GeoLocation(null, null);
+        if(this.currentRide == null) {
+            newLocation = this.randomizeLocation(currentLocation.getLongitude(), currentLocation.getLatitude());
+        } else {
+            if (this.currentLocation.getLongitude() == this.currentRide.destinationLocation.getLongitude()) {
+                newLocation.setLongitude(this.currentLocation.getLongitude());
+            } else if (this.currentLocation.getLongitude() > this.currentRide.destinationLocation.getLongitude()) {
+                newLocation.setLongitude(this.currentLocation.getLongitude() - 1);
+            } else {
+                newLocation.setLongitude(this.currentLocation.getLongitude() + 1);
+            }
+            if (this.currentLocation.getLatitude() == this.currentRide.destinationLocation.getLatitude()) {
+                newLocation.setLongitude(this.currentLocation.getLatitude());
+            } else if (this.currentLocation.getLatitude() > this.currentRide.destinationLocation.getLatitude()) {
+                newLocation.setLongitude(this.currentLocation.getLatitude() - 1);
+            } else {
+                newLocation.setLongitude(this.currentLocation.getLatitude() + 1);
+            }
+        }
+        this.updateLocation(this.currentLocation, newLocation);
     }
 
     private GeoLocation randomizeLocation(Integer longitude, Integer latitude) {

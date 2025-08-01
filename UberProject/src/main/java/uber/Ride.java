@@ -23,7 +23,4 @@ public class Ride {
         return this.destinationLocation;
     }
 
-    public String toJSON() {
-        return "";
-    }
 }

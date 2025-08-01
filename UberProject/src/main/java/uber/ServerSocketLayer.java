@@ -18,12 +18,6 @@ public class ServerSocketLayer {
 
     public Response sendMessageFromClient(Request request) {
 
-        if (request.currentUser != null) {
-            request = new RequestBuilder(request)
-                    .setUserClientConnection(this.connectionDB.getUserConnection(request.currentUser.Id))
-                    .build();
-        }
-
         switch (request.requestType) {
             case UPDATE_LOCATION:
                 return ServerSocketRequestHandler.handleUpdateLocation(request, connectionDB);
@@ -32,7 +26,6 @@ public class ServerSocketLayer {
             case CANCEL_TRIP, COMPLETE_TRIP:
                 return ServerSocketRequestHandler.endTrip(request, connectionDB);
             case SEND_MESSAGE:
-                System.out.println("Hits the handle message handler!");
                 return ServerSocketRequestHandler.handleSendMessage(request, connectionDB);
             case ACCEPT_RIDER:
                 return ServerSocketRequestHandler.handleAcceptRider(request, connectionDB);

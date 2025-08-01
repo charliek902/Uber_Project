@@ -3,13 +3,19 @@ package uber;
 public class ServerSocketRequestHandler {
 
     public static Response handleUpdateLocation(Request request, ConnectionDB db) {
-        request.connectedUser.client.onMessage(Utils.jsonSerialize(request));
-        return Utils.returnFailure();
+        ClientSocket clientSocket = getConnectedUserSocket(request, db);
+        if (clientSocket != null) {
+            clientSocket.onMessage(Utils.jsonSerialize(request));
+            return Utils.returnSuccess();
+        } else {
+            return Utils.returnFailure();
+        }
     }
 
     public static Response handleRequestDrivers(Request request, ConnectionDB db) {
         for (Driver driver : request.matchingDrivers) {
             ClientSocket socket = db.getUserConnection(driver.Id);
+
             socket.onMessage(Utils.jsonSerialize(request));
             Driver selectedDriver = (Driver) db.getUserConnection(driver.Id).getUser();
 
@@ -24,13 +30,10 @@ public class ServerSocketRequestHandler {
     }
 
     public static Response endTrip(Request request, ConnectionDB db) {
-        ClientSocket socket;
-        if (request.currentUser instanceof Driver) {
-            socket = db.getUserConnection(request.rider.Id);
-        } else {
-            socket = db.getUserConnection(request.driver.Id);
+        ClientSocket socket = getConnectedUserSocket(request, db);
+        if (socket == null) {
+            return Utils.returnFailure();
         }
-
         socket.onMessage(Utils.jsonSerialize(request));
 
         if (request.currentUser instanceof Driver) {
@@ -56,20 +59,34 @@ public class ServerSocketRequestHandler {
         }
     }
 
-
     public static Response handleSendMessage(Request request, ConnectionDB db) {
-        if(request.currentUser instanceof Driver) {
-            request.rider.client.onMessage(Utils.jsonSerialize(request));
+        ClientSocket clientSocket = getConnectedUserSocket(request, db);
+        if (clientSocket != null) {
+            clientSocket.onMessage(Utils.jsonSerialize(request));
+            return Utils.returnSuccess();
         } else {
-            request.driver.client.onMessage(Utils.jsonSerialize(request));
+            return Utils.returnFailure();
         }
-        return Utils.returnFailure();
     }
 
     public static Response handleAcceptRider(Request request, ConnectionDB db) {
-        request.connectedUser.client.onMessage(Utils.jsonSerialize(request));
-        // checks on whether user has been accepted (or if another driver got them)s
-        return Utils.returnFailure();
+        ClientSocket clientSocket = getConnectedUserSocket(request, db);
+        if (clientSocket != null) {
+            clientSocket.onMessage(Utils.jsonSerialize(request));
+            return Utils.returnSuccess();
+        } else {
+            return Utils.returnFailure();
+        }
     }
 
+    private static ClientSocket getConnectedUserSocket(Request request, ConnectionDB db) {
+        if (request != null && request.ride != null) {
+            if(request.currentUser instanceof Driver) {
+                return db.getUserConnection(request.ride.currentRider.Id);
+            } else {
+                return db.getUserConnection(request.ride.currentDriver.Id);
+            }
+        }
+        return null;
+    }
 }
