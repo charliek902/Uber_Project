@@ -1,6 +1,6 @@
 package uber;
 
-public class Main {
+public class main {
 
     public static void main(String[] args) throws Exception {
 //        ThreadPool threads = new ThreadPool();
@@ -22,7 +22,7 @@ public class Main {
         rider.setUserStatus(UserStatus.UNAVAILABLE);
 //        driver.move();
 //        driver.sendMessage("hello");
-        driver.completeTrip();
+//        driver.completeTrip();
 //        driver.cancelTrip();
     }
 
